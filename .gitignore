@@ -17,5 +17,8 @@ erl_crash.dump
 *.ez
 
 /log
+/log.*
 /ring_data_dir
+/ring_data_dir*
 /data
+/data*
