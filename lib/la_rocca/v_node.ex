@@ -15,6 +15,29 @@ defmodule LaRocca.VNode do
     {:reply, {:pong, partition}, state}
   end
 
+  def handle_command({:run_image, image, args}, _sender, state) do
+    Logger.debug("GOT a run_image. state: #{inspect state}\nimage: #{inspect image}\nargs: #{inspect args}")
+
+    {:ok, pid} = :docker_image.create(fromImage: image)
+    read_stream_from(pid)
+
+    Logger.debug("Image created!")
+
+    {:reply, :ok, state}
+  end
+
+  defp read_stream_from(pid) do
+    receive do
+      {pid, {:data, :eof}} ->
+        Logger.info("--- ALL DATA RECEIVED!!! ---")
+      {pid, {:data, content}} ->
+        Logger.info(content)
+        read_stream_from(pid)
+      {pid, error} ->
+        Logger.error("ERROR from stream #{inspect error}")
+    end
+  end
+
   def handle_handoff_command(_fold_req, _sender, state) do
     {:noreply, state}
   end
