@@ -7,6 +7,12 @@ config :riak_core,
   ring_state_dir: 'ring_data_dir_3',
   platform_data_dir: 'data_3'
 
-  config :erldocker,
-    unixbridge_port: 42333,
-    docker_http: "http://localhost:42333"
+config :erldocker,
+  unixbridge_port: 42333,
+  docker_http: "http://localhost:42333"
+
+# config :lager,
+#   error_logger_hwm: 5000,
+#   handlers: [
+#     lager_console_backend: :debug,
+#   ]

@@ -39,30 +39,37 @@ defmodule LaRocca.VNode do
   end
 
   def handle_handoff_command(_fold_req, _sender, state) do
+    Logger.debug("handle_handoff_command")
     {:noreply, state}
   end
 
-  def handoff_starting(_target_node, state) do
+  def handoff_starting(target_node, state) do
+    Logger.debug("handoff_starting #{inspect target_node} #{inspect state} from: #{inspect :erlang.get_stacktrace()}")
     {true, state}
   end
 
   def handoff_cancelled(state) do
+    Logger.debug("handoff_cancelled #{inspect state}")
     {:ok, state}
   end
 
-  def handoff_finished(_target_node, state) do
+  def handoff_finished(target_node, state) do
+    Logger.debug("handoff_finished #{inspect target_node} - #{inspect state}")
     {:ok, state}
   end
 
   def handle_handoff_data(data, state) do
+    Logger.debug("handoff_data #{inspect data} - #{inspect state}")
     {:reply, :ok, state}
   end
 
   def encode_handoff_item(object_name, object_value) do
+    Logger.debug("encode_handoff_item #{inspect object_name} - #{inspect object_value}")
     ""
   end
 
   def is_empty(state) do
+    Logger.debug("is_empty? #{inspect state}")
     {true, state}
   end
 

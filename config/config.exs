@@ -49,7 +49,7 @@ config :riak_core,
 
 # Enable debug log on console
 config :lager,
-  error_logger_hwm: 5000
+  error_logger_hwm: 5000#,
   # handlers: [
   #   lager_console_backend: :debug,
   # ]

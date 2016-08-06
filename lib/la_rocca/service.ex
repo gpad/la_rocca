@@ -1,5 +1,6 @@
 defmodule LaRocca.Service do
   require IEx
+  require Logger
 
   def ping do
     doc_idx = :riak_core_util.chash_key({"ping", bin_timestamp})
@@ -12,10 +13,23 @@ defmodule LaRocca.Service do
   end
 
   def run(image) do
-    docIdx = :riak_core_util.chash_key({image, bin_timestamp})
-    [idxNode] = :riak_core_apl.get_apl(docIdx, 1, LaRocca.Service)
-    # :riak_core_vnode_master.command(idxNode, {:run_image, image, ""}, LaRocca.VNode_master)
-    :riak_core_vnode_master.sync_spawn_command(idxNode, {:run_image, image, ""}, LaRocca.VNode_master)
+    doc_idx = :riak_core_util.chash_key({"image", image})
+    pref_list = :riak_core_apl.get_apl(doc_idx, 3, LaRocca.Service)
+    Logger.debug("Executing command on:\n#{inspect pref_list} ... ")
+    ret = :riak_core_vnode_master.command(pref_list, {:run_image, image, ""}, LaRocca.VNode_master)
+
+    #TODO -> Execute
+
+    # We need to find Pid instead of node ... make some test
+
+    # command2([{Index, Pid}|Rest], Msg, Sender, VMaster, How=normal)
+    #   when is_pid(Pid) ->
+    #     gen_fsm:send_event(Pid, make_request(Msg, Sender, Index)),
+    #     command2(Rest, Msg, Sender, VMaster, How);
+
+
+
+    Logger.debug("Command return: '#{inspect ret}'.")
   end
 
   def bin_timestamp do
